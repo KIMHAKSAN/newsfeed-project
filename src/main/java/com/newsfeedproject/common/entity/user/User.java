@@ -10,7 +10,7 @@ import org.hibernate.annotations.Comment;
 
 @Entity
 @Table(name = "USER")
-public class UserEntity {
+public class User {
 
     /**
      *        bigint user_id PK "유저 식별자"
