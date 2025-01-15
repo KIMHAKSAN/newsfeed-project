@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class NewsfeedProjectApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(NewsfeedProjectApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(NewsfeedProjectApplication.class, args);
+	}
 
 }
