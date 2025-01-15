@@ -1,29 +1,49 @@
 package com.newsfeedproject.common.entity;
 
 import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.ColumnDefault;
 import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 
 @Getter
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
-	@CreatedDate
-	@Column(updatable = false)
-	private LocalDateTime createAt;
+	@Comment("생성일")
+	@Column(
+		name = "created_at",
+		nullable = false
+	)
+	private LocalDateTime createdAt;
 
-	@Column
-	@LastModifiedDate
-	private LocalDateTime updateAt;
+	@Comment("수정일")
+	@Column(
+		name = "updated_at",
+		nullable = false
+	)
+	private LocalDateTime updatedAt;
 
-	@Column
-	private LocalDateTime deleteAt;
+	@Comment("삭제 여부")
+	@ColumnDefault("0")
+	@Column(
+		name = "is_deleted",
+		nullable = false
+	)
+	private Integer isDeleted = 0;
+
+	@Comment("삭제일")
+	@Column(
+		name = "deleted_at"
+	)
+	private LocalDateTime deletedAt;
+
+	protected BaseEntity() {
+	}
+
+	public void markAsDeleted() {
+		this.isDeleted = 1;
+		this.deletedAt = LocalDateTime.now();
+	}
 }
