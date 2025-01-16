@@ -9,7 +9,9 @@ import com.newsfeedproject.common.entity.comment.Comment;
 import com.newsfeedproject.common.entity.post.Post;
 import com.newsfeedproject.common.entity.user.User;
 import com.newsfeedproject.dto.comment.request.CreateCommentRequestDto;
+import com.newsfeedproject.dto.comment.request.UpdateCommentRequestDto;
 import com.newsfeedproject.dto.comment.response.CreateCommentResponseDto;
+import com.newsfeedproject.dto.comment.response.UpdateCommentResponseDto;
 import com.newsfeedproject.repository.comment.CommentRepository;
 import com.newsfeedproject.repository.post.PostRepository;
 import com.newsfeedproject.repository.user.UserRepository;
@@ -46,8 +48,12 @@ public class CommentService {
 		);
 	}
 
-	public List<CreateCommentResponseDto> findAllComments(Long postId) {
-		return new ArrayList<CreateCommentResponseDto>();
+	public List<CreateCommentResponseDto> findAllComments(Long PostId) {
+		return new ArrayList<>();
+	}
+
+	public UpdateCommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
+		return new UpdateCommentResponseDto(commentRepository.findById(commentId));
 	}
 }
 

@@ -7,12 +7,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newsfeedproject.dto.comment.request.CreateCommentRequestDto;
+import com.newsfeedproject.dto.comment.request.UpdateCommentRequestDto;
 import com.newsfeedproject.dto.comment.response.CreateCommentResponseDto;
+import com.newsfeedproject.dto.comment.response.UpdateCommentResponseDto;
 import com.newsfeedproject.service.comment.CommentService;
 
 import lombok.RequiredArgsConstructor;
@@ -45,6 +48,15 @@ public class CommentController {
 		List<CreateCommentResponseDto> createCommentResponseDtoList = commentService.findAllComments(postId);
 
 		return new ResponseEntity<>(createCommentResponseDtoList, HttpStatus.OK);
+	}
+
+	@PutMapping("/posts/{post_id}/comments/{comment_id}") // 댓글 수정
+	public ResponseEntity<UpdateCommentResponseDto> updateComment(
+		@PathVariable("comment_id") Long commentId,
+		@RequestBody UpdateCommentRequestDto updateCommentRequestDto
+	) {
+		UpdateCommentResponseDto updatedComment = commentService.updateComment(commentId, updateCommentRequestDto);
+		return new ResponseEntity<>(updatedComment, HttpStatus.OK);
 	}
 }
 
