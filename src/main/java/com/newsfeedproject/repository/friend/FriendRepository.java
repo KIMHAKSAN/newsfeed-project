@@ -11,7 +11,10 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
 	Optional<Friend> findById(Long id);
 
+	Optional<Friend> findByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
+	
 	List<Friend> findByFromUserId(Long fromUserId);
 
 	List<Friend> findByToUserId(Long toUserId);
+
 }
