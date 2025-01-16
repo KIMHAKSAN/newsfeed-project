@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
+import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
+import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.service.user.UserService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,11 @@ public class UserController {
 	// 회원 탈퇴
 
 	// 로그인
+	@PostMapping("/login")
+	public ResponseEntity<LoginUserResponseDto> userLogin(@RequestBody LoginUserRequestDto dto) {
+		return new ResponseEntity<>(userService.loginUserService(dto), HttpStatus.OK);
+	}
+
 	// 로그아웃
 
 	// 회원 다건 조회
