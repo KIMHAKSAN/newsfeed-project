@@ -18,11 +18,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 @Getter
+@AllArgsConstructor
 @Table(name = "Comment")
 public class Comment {
 
@@ -53,4 +55,13 @@ public class Comment {
 	@Column(name = "deleted_at", nullable = false)
 	private LocalDateTime deletedAt;
 
+	// 기본 생성자
+	public Comment() {
+
+	}
+
+	// 필요 부분 생성자 (인수 3)
+	public Comment(String content, User user, Post post) {
+
+	}
 }
