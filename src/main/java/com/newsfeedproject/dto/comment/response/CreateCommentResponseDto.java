@@ -10,8 +10,8 @@ import lombok.Getter;
 public class CreateCommentResponseDto {
 
 	private Long id;
+	private String userName;
 	private String content;
-	private String username;
 	private LocalDateTime createdAt;
 
 	public CreateCommentResponseDto(Long id, String content) {
