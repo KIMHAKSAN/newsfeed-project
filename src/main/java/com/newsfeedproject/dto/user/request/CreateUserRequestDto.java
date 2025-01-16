@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public class CreateUserRequestDto {
 
-	private String email;
-	private String userName;
-	private String password;
-	private String reEnterPassword;
+	private final String email;
+	private final String userName;
+	private final String password;
+	private final String reEnterPassword;
 
 	public CreateUserRequestDto(String email, String userName, String password, String reEnterPassword) {
 		this.email = email;

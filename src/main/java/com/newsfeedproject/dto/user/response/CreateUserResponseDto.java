@@ -1,6 +1,8 @@
 package com.newsfeedproject.dto.user.response;
 
+import lombok.Getter;
 
+@Getter
 public class CreateUserResponseDto {
 
 	private final String message;

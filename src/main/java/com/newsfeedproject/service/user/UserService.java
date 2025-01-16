@@ -8,7 +8,6 @@ import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -26,15 +25,15 @@ public class UserService {
                 throw new BaseException(ResponseCode.EMAIL_ALREADY_EXISTS);
             });
 
-        // 비번과 재입력비번 일치하는지 확인
-        if (dto.getPassword() != dto.getReEnterPassword()) {
+        // 비번과 재입력비번 일치하는지 확인(equals는 주소값이 아닌 값을 비교)
+        if (!dto.getPassword().equals(dto.getReEnterPassword())) {
             // 비밀번호 불일치 예외처리
             throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
         }
 
         // Db에 저장
         User user = new User(dto.getUserName(), dto.getEmail(), dto.getPassword());
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         // 회원 가입 완료 메시지 컨트롤러로 출력
         return new CreateUserResponseDto();
