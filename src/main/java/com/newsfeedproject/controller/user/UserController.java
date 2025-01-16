@@ -33,13 +33,14 @@ public class UserController {
 
 	// 회원 탈퇴
 
-	// 로그인
+	// 로그인(todo 세션 사용해야 함)
 	@PostMapping("/login")
 	public ResponseEntity<LoginUserResponseDto> userLogin(@RequestBody LoginUserRequestDto dto) {
 		return new ResponseEntity<>(userService.loginUserService(dto), HttpStatus.OK);
 	}
 
-	// 로그아웃
+	// 로그아웃(todo 세션 사용해야 함. invalidate() 사용)
+
 
 	// 회원 다건 조회
 }

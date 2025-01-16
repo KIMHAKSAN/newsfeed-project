@@ -2,6 +2,7 @@ package com.newsfeedproject.service.user;
 
 import java.util.Optional;
 
+import com.newsfeedproject.common.config.PasswordEncoder;
 import com.newsfeedproject.common.entity.user.User;
 import com.newsfeedproject.common.exception.BaseException;
 import com.newsfeedproject.common.exception.ResponseCode;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입
     public CreateUserResponseDto userSignupService(CreateUserRequestDto dto) {
@@ -35,8 +37,11 @@ public class UserService {
             throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
         }
 
+        // PasswordEncoder로 암호화
+        String bcryptPassword = passwordEncoder.encode(dto.getPassword());
+
         // Db에 저장
-        User user = new User(dto.getUserName(), dto.getEmail(), dto.getPassword());
+        User user = new User(dto.getUserName(), dto.getEmail(), bcryptPassword);
         userRepository.save(user);
 
         // 회원 가입 완료 메시지 컨트롤러로 출력
@@ -53,10 +58,8 @@ public class UserService {
         // 이메일이 DB에 없을 때 예외처리
         User user = findUser.orElseThrow(() -> new BaseException(ResponseCode.EMAIL_NOT_FOUND));
 
-        boolean isPasswordIncorrect = !dto.getPassword().equals(user.getPassword());
-
         // 비밀번호 불일치 예외처리
-        if (isPasswordIncorrect) {
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
         }
 
