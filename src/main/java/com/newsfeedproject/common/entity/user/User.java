@@ -53,6 +53,9 @@ public class User {
     )
     private String password;
 
+    // 아무것도 매개변수로 받지 않는 생성자
+    protected User() {}
+
     public User(String userName, String email, String password) {
         this.userName = userName;
         this.email = email;
