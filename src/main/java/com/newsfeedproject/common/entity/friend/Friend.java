@@ -46,4 +46,8 @@ public class Friend {
 		this.status = status;
 	}
 
+	// 친구 상태 변경 메서드
+	public void updateStatus(FriendStatus newStatus) {
+		this.status = newStatus;
+	}
 }

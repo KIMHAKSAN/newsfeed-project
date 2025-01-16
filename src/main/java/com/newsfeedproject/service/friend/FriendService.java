@@ -39,7 +39,18 @@ public class FriendService {
 		// 즉시 로딩하여 Friend의 fromUser와 toUser를 사용할 수 있도록 보장
 		return friend;
 	}
+
 	// 친구 수락 PATCH /api/friends/{tofriendId)/{fromuserId}
+	@Transactional
+	public void changeFriendStatusService(Long fromUserId, Long toUserId) {
+		// fromUserId와 toUserId로 친구 관계 찾기
+		Friend friend = friendRepository.findByFromUserIdAndToUserId(fromUserId, toUserId)
+			.orElseThrow(() -> new IllegalArgumentException("Friend relationship not found"));
+		// 친구 수락하여 저장
+		friend.updateStatus(FriendStatus.FRIEND_ACCEPT);
+
+		friendRepository.save(friend);
+	}
 
 	// 친구 삭제 DELETE /api/friends/{tofriendId)/{fromuserId}
 
