@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.newsfeedproject.common.entity.post.Post;
 import com.newsfeedproject.common.entity.user.User;
 
 import jakarta.persistence.Column;
@@ -35,7 +36,7 @@ public class Comment {
 
 	@ManyToOne
 	@JoinColumn(name = "post_id")
-	private Comment parent;
+	private Post post;
 
 	@JoinColumn(name = "contnet")
 	private String content;
