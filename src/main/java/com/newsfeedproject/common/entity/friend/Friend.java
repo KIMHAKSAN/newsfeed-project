@@ -27,12 +27,11 @@ public class Friend {
 	// JPA에서 엔티티의 기본 키(primary key)를 자동으로 생성하기 위한 설정
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY) // 다대일 관계 설정
-	@JoinColumn(name = "from_user_id", nullable = false) // 관계에서 외래 키로 설정
-	// nullable = false, null을 쓸지 안 쓸지 말한다.
+	@ManyToOne(fetch = FetchType.EAGER) // EAGER 로딩으로 변경
+	@JoinColumn(name = "from_user_id", nullable = false)
 	private User fromUser;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "to_user_id", nullable = false)
 	private User toUser;
 
