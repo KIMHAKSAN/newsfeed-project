@@ -1,10 +1,14 @@
 package com.newsfeedproject.service.user;
 
+import java.util.Optional;
+
 import com.newsfeedproject.common.entity.user.User;
 import com.newsfeedproject.common.exception.BaseException;
 import com.newsfeedproject.common.exception.ResponseCode;
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
+import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
+import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +29,7 @@ public class UserService {
                 throw new BaseException(ResponseCode.EMAIL_ALREADY_EXISTS);
             });
 
-        // 비번과 재입력비번 일치하는지 확인(equals는 주소값이 아닌 값을 비교)
+        // 비번과 재입력비번 일치하는지 확인(equals는 주소값이 아닌, 값을 비교)
         if (!dto.getPassword().equals(dto.getReEnterPassword())) {
             // 비밀번호 불일치 예외처리
             throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
@@ -42,6 +46,24 @@ public class UserService {
     // 회원 탈퇴
 
     // 로그인
+    public LoginUserResponseDto loginUserService(LoginUserRequestDto dto) {
+        // 이메일 기준으로 DB에서 유저 찾기
+        Optional<User> findUser = userRepository.findByEmail(dto.getEmail());
+
+        // 이메일이 DB에 없을 때 예외처리
+        User user = findUser.orElseThrow(() -> new BaseException(ResponseCode.EMAIL_NOT_FOUND));
+
+        boolean isPasswordIncorrect = !dto.getPassword().equals(user.getPassword());
+
+        // 비밀번호 불일치 예외처리
+        if (isPasswordIncorrect) {
+            throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
+        }
+
+        // 로그인 완료 메시지 컨트롤러로 출력
+        return new LoginUserResponseDto();
+    }
+
     // 로그아웃
 
     // 회원 다건 조회
