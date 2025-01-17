@@ -1,8 +1,11 @@
 package com.newsfeedproject.controller.friend;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,19 +31,21 @@ public class FriendController {
 	@PostMapping
 	public ResponseEntity<FriendResponseDto> createFriend(@RequestBody FriendRequestDto requestDto) {
 		Friend friend = friendService.createFriendService(requestDto);
-		FriendResponseDto responseDto = new FriendResponseDto(friend);
+		Long userId = friend.getToUser().getId();
+		String userName = friend.getToUser().getUserName();
+		FriendResponseDto responseDto = new FriendResponseDto(friend, userId, userName);
 		return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
 	}
 
 	//친구 수락
-	@PatchMapping("/accept/{toUserId}/{fromUserId}")  // friends 부분을 제거한 경로
+	@PatchMapping("/accept/{toUserId}/{fromUserId}")
 	public ResponseEntity<String> AcceptFriendStatus(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
 		friendService.AcceptFriendStatusService(fromUserId, toUserId);
 		return ResponseEntity.ok("Friend status updated successfully");
 	}
 
 	// 친구 거절
-	@PatchMapping("/decline/{toUserId}/{fromUserId}")  // friends 부분을 제거한 경로
+	@PatchMapping("/decline/{toUserId}/{fromUserId}")
 	public ResponseEntity<String> DeclineFriendStatus(@PathVariable Long fromUserId, @PathVariable Long toUserId) {
 		friendService.DeclineFriendStatusService(fromUserId, toUserId);
 		return ResponseEntity.ok("Friend status updated successfully");
@@ -54,4 +59,19 @@ public class FriendController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	// 친구 단건 조회
+	@GetMapping("/user/{id}/{userId}")
+	public ResponseEntity<FriendResponseDto> findFriendById(
+		@PathVariable Long id,
+		@PathVariable Long userId) {
+		FriendResponseDto responseDto = friendService.findFriendById(id, userId);
+		return ResponseEntity.ok(responseDto);
+	}
+
+	// 친구 다건 조회
+	@GetMapping("/user/{userId}")
+	public ResponseEntity<List<FriendResponseDto>> findAllFriendsByUserId(@PathVariable Long userId) {
+		List<FriendResponseDto> responseDtos = friendService.findAllFriendsByUserId(userId);
+		return ResponseEntity.ok(responseDtos);
+	}
 }

@@ -1,5 +1,7 @@
 package com.newsfeedproject.service.friend;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -7,6 +9,7 @@ import com.newsfeedproject.common.entity.friend.Friend;
 import com.newsfeedproject.common.entity.friend.FriendStatus;
 import com.newsfeedproject.common.entity.user.User;
 import com.newsfeedproject.dto.friend.FriendRequestDto;
+import com.newsfeedproject.dto.friend.FriendResponseDto;
 import com.newsfeedproject.repository.friend.FriendRepository;
 import com.newsfeedproject.repository.user.UserRepository;
 
@@ -69,8 +72,52 @@ public class FriendService {
 	public void deleteFriend(Long id) {
 		friendRepository.deleteById(id);
 	}
-	// 친구 단건 조회 GET /api/friends/{userId}/{fromfriendId)
 
-	// 친구 다건 조회 GET /api/friends/{userId}
+	// 친구 단건 조회
+	public FriendResponseDto findFriendById(Long id, Long userId) {
+		Friend friend = friendRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException("Friend not found"));
 
+		// 사용자 구분 및 출력 데이터 구성
+		if (friend.getFromUser().getId().equals(userId)) {
+			return new FriendResponseDto(
+				friend.getId(),
+				friend.getToUser().getId(),
+				friend.getToUser().getUserName(),
+				friend.getStatus()
+			);
+		} else if (friend.getToUser().getId().equals(userId)) {
+			return new FriendResponseDto(
+				friend.getId(),
+				friend.getFromUser().getId(),
+				friend.getFromUser().getUserName(),
+				friend.getStatus()
+			);
+		} else {
+			throw new IllegalArgumentException("Invalid user for this friend");
+		}
+	}
+
+	// 친구 다건 조회
+	public List<FriendResponseDto> findAllFriendsByUserId(Long userId) {
+		List<Friend> friends = friendRepository.findAllByFromUserIdOrToUserId(userId, userId);
+
+		return friends.stream().map(friend -> {
+			if (friend.getFromUser().getId().equals(userId)) {
+				return new FriendResponseDto(
+					friend.getId(),
+					friend.getToUser().getId(),
+					friend.getToUser().getUserName(),
+					friend.getStatus()
+				);
+			} else {
+				return new FriendResponseDto(
+					friend.getId(),
+					friend.getFromUser().getId(),
+					friend.getFromUser().getUserName(),
+					friend.getStatus()
+				);
+			}
+		}).toList();
+	}
 }
