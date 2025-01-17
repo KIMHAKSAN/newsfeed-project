@@ -1,42 +1,37 @@
 package com.newsfeedproject.common.entity.comment;
 
-import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
+import com.newsfeedproject.common.entity.BaseEntity;
 import com.newsfeedproject.common.entity.post.Post;
 import com.newsfeedproject.common.entity.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // 추가!
 @Table(name = "Comment")
-public class Comment {
+public class Comment extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY) // LAZY로 설정해야 합니다. 왜? 필요할 때에만 얻어와야 하기 때문이다.
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)//  LAZY로 설정해야 합니다. 왜? 필요할 때에만 얻어와야 하기 때문이다.
 	@JoinColumn(name = "post_id")
 	private Post post;
 
@@ -45,23 +40,6 @@ public class Comment {
 
 	@Column(name = "parent_comment_id")
 	private Long parentCommentId; // 부모 댓글 추가!
-
-	@CreatedDate
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
-
-	@LastModifiedDate
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
-
-	// 삭제에 대한 어노테이션이 필요한가?
-	@Column(name = "deleted_at", nullable = false)
-	private LocalDateTime deletedAt;
-
-	// 기본 생성자
-	public Comment() {
-
-	}
 
 	// 필요 부분 생성자 (인수 4)
 	public Comment(String content, User user, Post post, Long parentId) {
