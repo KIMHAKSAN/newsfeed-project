@@ -12,9 +12,8 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 	Optional<Friend> findById(Long id);
 
 	Optional<Friend> findByFromUserIdAndToUserId(Long fromUserId, Long toUserId);
-	
-	List<Friend> findByFromUserId(Long fromUserId);
 
-	List<Friend> findByToUserId(Long toUserId);
+	// 특정 User의 모든 친구 조회
+	List<Friend> findAllByFromUserIdOrToUserId(Long fromUserId, Long toUserId);
 
 }
