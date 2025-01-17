@@ -51,7 +51,7 @@ public class UserService {
     // 회원 탈퇴
 
     // 로그인
-    public LoginUserResponseDto loginUserService(LoginUserRequestDto dto) {
+    public User loginUserService(LoginUserRequestDto dto) {
         // 이메일 기준으로 DB에서 유저 찾기
         Optional<User> findUser = userRepository.findByEmail(dto.getEmail());
 
@@ -64,7 +64,7 @@ public class UserService {
         }
 
         // 로그인 완료 메시지 컨트롤러로 출력
-        return new LoginUserResponseDto();
+        return user;
     }
 
     // 로그아웃
