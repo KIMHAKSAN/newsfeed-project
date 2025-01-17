@@ -43,6 +43,9 @@ public class Comment {
 	@JoinColumn(name = "contnet")
 	private String content;
 
+	@Column(name = "parent_comment_id")
+	private Long parentCommentId; // 부모 댓글 추가!
+
 	@CreatedDate
 	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
@@ -60,8 +63,11 @@ public class Comment {
 
 	}
 
-	// 필요 부분 생성자 (인수 3)
-	public Comment(String content, User user, Post post) {
-
+	// 필요 부분 생성자 (인수 4)
+	public Comment(String content, User user, Post post, Long parentId) {
+		this.content = content;
+		this.user = user;
+		this.post = post;
+		this.parentCommentId = parentId;
 	}
 }

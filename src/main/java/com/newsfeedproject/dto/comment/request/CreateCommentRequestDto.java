@@ -8,6 +8,7 @@ import lombok.Getter;
 public class CreateCommentRequestDto {
 
 	private String userName;
+	private Long parentCommentId; // 부모댓글 생성 -> nullable
 	private String content;
 
 	public Long getUserId() {
