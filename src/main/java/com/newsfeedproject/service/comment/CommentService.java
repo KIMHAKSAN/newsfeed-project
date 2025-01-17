@@ -9,7 +9,9 @@ import com.newsfeedproject.common.entity.comment.Comment;
 import com.newsfeedproject.common.entity.post.Post;
 import com.newsfeedproject.common.entity.user.User;
 import com.newsfeedproject.dto.comment.request.CreateCommentRequestDto;
+import com.newsfeedproject.dto.comment.request.UpdateCommentRequestDto;
 import com.newsfeedproject.dto.comment.response.CreateCommentResponseDto;
+import com.newsfeedproject.dto.comment.response.UpdateCommentResponseDto;
 import com.newsfeedproject.repository.comment.CommentRepository;
 import com.newsfeedproject.repository.post.PostRepository;
 import com.newsfeedproject.repository.user.UserRepository;
@@ -27,14 +29,27 @@ public class CommentService {
 
 	// 댓글 생성 메서드
 	public CreateCommentResponseDto createComment(Long postId, CreateCommentRequestDto createRequestDto) {
+
 		// 피드(게시물)와 작성자 정보 조회
 		Post post = postRepository.findPostByPostId(postId)
 			.orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
 		User user = userRepository.findById(createRequestDto.getUserId())
 			.orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
+		// 부모 아이디의 존재여부 검증 로직
+		if (createRequestDto.getParentCommentId() != null) {
+			boolean existsById = commentRepository.existsById(createRequestDto.getParentCommentId());
+			if (!existsById) {
+				throw new EntityNotFoundException("부모 댓글이 존재하지 않습니다."); // 같은 코드 if(existById == false)
+			}
+		}
+
 		// 댓글 엔티티 생성
-		Comment comment = new Comment(createRequestDto.getContent(), user, post);
+		Comment comment = new Comment(
+			createRequestDto.getContent(),
+			user,
+			post,
+			createRequestDto.getParentCommentId());
 
 		// 데이터베이스에 댓글 저장
 		Comment savedComment = commentRepository.save(comment);
@@ -46,9 +61,23 @@ public class CommentService {
 		);
 	}
 
-	public List<CreateCommentResponseDto> findAllComments(Long postId) {
-		return new ArrayList<CreateCommentResponseDto>();
+	public List<CreateCommentResponseDto> findAllComments(Long PostId) {
+		return new ArrayList<>();
 	}
+
+	public UpdateCommentResponseDto updateComment(Long commentId, UpdateCommentRequestDto updateCommentRequestDto) {
+		return new UpdateCommentResponseDto(commentRepository.findById(commentId));
+	}
+
+	public void deleteComment(Long commentId) {
+
+		Comment comment = commentRepository.findById(commentId)
+			.orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다."));
+
+		commentRepository.delete(comment);
+
+	}
+
 }
 
 

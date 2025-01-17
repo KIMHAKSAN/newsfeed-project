@@ -9,17 +9,16 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class FriendResponseDto {
-	private Long id; // Friend 엔티티의 ID
-	private Long fromUserId; // 요청한 유저의 ID
-	private Long toUserId;   // 친구 요청받은 유저의 ID
+	private Long id;             // Friend 엔티티의 ID
+	private Long userId;         // 상대방 유저의 ID
+	private String userName;     // 상대방 유저의 이름
 	private FriendStatus status; // 친구 상태
 
-	public FriendResponseDto(Friend friend) {
+	public FriendResponseDto(Friend friend, Long userId, String userName) {
 		this.id = friend.getId();
+		this.userId = friend.getToUser().getId();
+		this.userName = userName;
 		this.status = friend.getStatus();
-
-		this.fromUserId = friend.getFromUser().getId();
-		this.toUserId = friend.getToUser().getId();
 
 	}
 }

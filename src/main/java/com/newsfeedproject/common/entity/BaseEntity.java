@@ -3,16 +3,18 @@ package com.newsfeedproject.common.entity;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 
 @Getter
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
 
 	@Comment("생성일")
@@ -37,7 +39,8 @@ public abstract class BaseEntity {
 		name = "is_deleted",
 		nullable = false
 	)
-	private Integer isDeleted = 0;
+
+	private boolean isDeleted = false;
 
 	@Comment("삭제일")
 	@Column(
@@ -50,7 +53,7 @@ public abstract class BaseEntity {
 	}
 
 	public void markAsDeleted() {
-		this.isDeleted = 1;
+		this.isDeleted = false;
 		this.deletedAt = LocalDateTime.now();
 	}
 }
