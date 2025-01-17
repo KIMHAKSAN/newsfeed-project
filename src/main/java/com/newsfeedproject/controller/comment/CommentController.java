@@ -42,7 +42,7 @@ public class CommentController {
 		return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
 	}
 
-	@GetMapping("/posts/{post_id}/comments") // 댓글 다건 조회
+	@GetMapping // 댓글 다건 조회
 	public ResponseEntity<List<CreateCommentResponseDto>> findAllComments(
 		@PathVariable("post_id") Long postId
 	) {
@@ -51,7 +51,7 @@ public class CommentController {
 		return new ResponseEntity<>(createCommentResponseDtoList, HttpStatus.OK);
 	}
 
-	@PutMapping("/posts/{post_id}/comments/{comment_id}") // 댓글 수정
+	@PutMapping("/{comment_id}") // 댓글 수정
 	public ResponseEntity<UpdateCommentResponseDto> updateComment(
 		@PathVariable("comment_id") Long commentId,
 		@RequestBody UpdateCommentRequestDto updateCommentRequestDto
@@ -60,7 +60,7 @@ public class CommentController {
 		return new ResponseEntity<>(updatedComment, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/posts/{post_id}/comments/{comment_id}") // 댓글 삭제
+	@DeleteMapping("/{comment_id}") // 댓글 삭제
 	public ResponseEntity<Void> deleteComment(
 		@PathVariable("comment_id") Long commentId
 	) {
