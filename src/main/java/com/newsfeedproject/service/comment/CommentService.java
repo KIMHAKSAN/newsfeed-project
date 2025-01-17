@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.newsfeedproject.common.entity.comment.Comment;
 import com.newsfeedproject.common.entity.post.Post;
 import com.newsfeedproject.common.entity.user.User;
+import com.newsfeedproject.common.exception.comment.CommentNotFoundException;
+import com.newsfeedproject.common.exception.comment.PostNotFoundException;
 import com.newsfeedproject.dto.comment.request.CreateCommentRequestDto;
 import com.newsfeedproject.dto.comment.request.UpdateCommentRequestDto;
 import com.newsfeedproject.dto.comment.response.CreateCommentResponseDto;
@@ -19,6 +22,7 @@ import com.newsfeedproject.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -28,11 +32,12 @@ public class CommentService {
 	private final PostRepository postRepository;
 
 	// 댓글 생성 메서드
+	@Transactional
 	public CreateCommentResponseDto createComment(Long postId, CreateCommentRequestDto createRequestDto) {
 
 		// 피드(게시물)와 작성자 정보 조회
-		Post post = postRepository.findPostByPostId(postId)
-			.orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+		Post post = postRepository.findPostById(postId)
+			.orElseThrow(() -> new PostNotFoundException()); // 예외처리 추가
 		User user = userRepository.findById(createRequestDto.getUserId())
 			.orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
 
@@ -40,7 +45,7 @@ public class CommentService {
 		if (createRequestDto.getParentCommentId() != null) {
 			boolean existsById = commentRepository.existsById(createRequestDto.getParentCommentId());
 			if (!existsById) {
-				throw new EntityNotFoundException("부모 댓글이 존재하지 않습니다."); // 같은 코드 if(existById == false)
+				throw new CommentNotFoundException(); // 같은 코드 if(existById == false) -> 예외처리 추가
 			}
 		}
 
@@ -72,7 +77,7 @@ public class CommentService {
 	public void deleteComment(Long commentId) {
 
 		Comment comment = commentRepository.findById(commentId)
-			.orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다."));
+			.orElseThrow(() -> new CommentNotFoundException()); // 예외처리 추가
 
 		commentRepository.delete(comment);
 

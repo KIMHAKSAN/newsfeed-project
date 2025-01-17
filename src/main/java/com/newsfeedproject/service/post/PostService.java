@@ -3,9 +3,6 @@ package com.newsfeedproject.service.post;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,11 +12,13 @@ import com.newsfeedproject.common.exception.post.DeletePostException;
 import com.newsfeedproject.dto.post.request.CreatePostRequestDto;
 import com.newsfeedproject.dto.post.request.UpdatePostRequestDto;
 import com.newsfeedproject.dto.post.response.CreatePostResponseDto;
-import com.newsfeedproject.dto.post.response.FindPostResponseDto;
 import com.newsfeedproject.dto.post.response.DeletePostResponseDto;
+import com.newsfeedproject.dto.post.response.FindPostResponseDto;
 import com.newsfeedproject.dto.post.response.UpdatePostResponseDto;
 import com.newsfeedproject.repository.post.PostRepository;
 import com.newsfeedproject.repository.user.UserRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -35,14 +34,14 @@ public class PostService {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new IllegalArgumentException("유저 아이디를 찾을수 없습니다."));
 
-		Post post = new Post( createPostRequestdto.getContent());
+		Post post = new Post(createPostRequestdto.getContent());
 		Post savePost = postRepository.save(post);
 		return new CreatePostResponseDto("게시글이 생성되었습니다.", savePost);
 	}
 
 	//게시물 조회 기능
 	public FindPostResponseDto findPostById(Long id) {
-		Post findPost = postRepository.findPostByPostId(id)
+		Post findPost = postRepository.findPostById(id)
 			.orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
 		//삭제된 게시물을 조회하면 던지는 예외
@@ -85,7 +84,7 @@ public class PostService {
 	//게시글 삭제 기능
 	@Transactional
 	public DeletePostResponseDto deletePost(Long id) {
-		Post savePost = postRepository.findPostByPostId(id)
+		Post savePost = postRepository.findPostById(id)
 			.orElseThrow(() -> new IllegalArgumentException("삭제 할 게시글을 찾을 수 없습니다."));
 
 		//게시글 삭제 요청 시 포스트의 삭제상태를 true 로 변경
