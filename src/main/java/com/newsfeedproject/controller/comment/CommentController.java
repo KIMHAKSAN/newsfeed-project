@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,18 @@ public class CommentController {
 		UpdateCommentResponseDto updatedComment = commentService.updateComment(commentId, updateCommentRequestDto);
 		return new ResponseEntity<>(updatedComment, HttpStatus.OK);
 	}
+
+	@DeleteMapping("/posts/{post_id}/comments/{comment_id}") // 댓글 삭제
+	public ResponseEntity<Void> deleteComment(
+		@PathVariable("comment_id") Long commentId
+	) {
+		commentService.deleteComment(commentId);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
 }
+
 
 
 
