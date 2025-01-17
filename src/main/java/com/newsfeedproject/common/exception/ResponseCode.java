@@ -15,7 +15,8 @@ public enum ResponseCode {
 	PASSWORD_SAME_AS_BEFORE(HttpStatus.BAD_REQUEST, "바꾸려는 비밀번호가 이전과 동일하거나, 입력한 비밀번호가 서로 다릅니다."),
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "회원을 찾을 수 없습니다."),
 	EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "입력하신 아이디를 찾을 수 없습니다. 다시 확인해주세요."),
-	ID_MISMATCH(HttpStatus.UNAUTHORIZED, "권한이 존재하지 않습니다.");
+	ID_MISMATCH(HttpStatus.UNAUTHORIZED, "권한이 존재하지 않습니다."),
+	POST_IS_DELETE(HttpStatus.BAD_REQUEST, "삭제된 게시글은 조회/삭제 할 수 없습니다.");
 
 	private final HttpStatus status;
 	private final String message;
