@@ -8,11 +8,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "USER")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     /**
@@ -49,10 +52,6 @@ public class User {
         nullable = false
     )
     private String password;
-
-    // 아무것도 매개변수로 받지 않는 생성자
-    protected User() {
-    }
 
     public User(String userName, String email, String password) {
         this.userName = userName;
