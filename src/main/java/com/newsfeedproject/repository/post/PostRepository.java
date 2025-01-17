@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-	Optional<Post> findPostByPostId(Long postId);
+	Optional<Post> findPostById(Long postId);
 }

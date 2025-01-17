@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.newsfeedproject.common.entity.comment.Comment;
 import com.newsfeedproject.common.entity.post.Post;
@@ -21,6 +22,7 @@ import com.newsfeedproject.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+@Transactional(readOnly = true)
 @Service
 @RequiredArgsConstructor
 public class CommentService {
@@ -30,10 +32,11 @@ public class CommentService {
 	private final PostRepository postRepository;
 
 	// 댓글 생성 메서드
+	@Transactional
 	public CreateCommentResponseDto createComment(Long postId, CreateCommentRequestDto createRequestDto) {
 
 		// 피드(게시물)와 작성자 정보 조회
-		Post post = postRepository.findPostByPostId(postId)
+		Post post = postRepository.findPostById(postId)
 			.orElseThrow(() -> new PostNotFoundException()); // 예외처리 추가
 		User user = userRepository.findById(createRequestDto.getUserId())
 			.orElseThrow(() -> new EntityNotFoundException("유저를 찾을 수 없습니다."));
