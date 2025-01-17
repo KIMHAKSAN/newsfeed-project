@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/posts/{Post_id}/comments")
+@RequestMapping("/api/posts/{post_id}//comments")
 public class CommentController {
 
 	// 속성
@@ -34,22 +34,23 @@ public class CommentController {
 	// 기능
 	@PostMapping // 댓글 생성
 	public ResponseEntity<CreateCommentResponseDto> createComment(
-		@PathVariable("post_id") Long postId,
+		@PathVariable("post_id") Long postId, // (name="...")로 적으면 더 빡세게 적을 수 있다!
 		@RequestBody CreateCommentRequestDto createRequestDto
 	) {
 		CreateCommentResponseDto createdComment = commentService.createComment(postId, createRequestDto);
-
 		return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
 	}
 
-	@GetMapping // 댓글 다건 조회
+	@GetMapping // 댓글(대댓글 포함) 다건 조회
 	public ResponseEntity<List<CreateCommentResponseDto>> findAllComments(
 		@PathVariable("post_id") Long postId
 	) {
 		List<CreateCommentResponseDto> createCommentResponseDtoList = commentService.findAllComments(postId);
-
 		return new ResponseEntity<>(createCommentResponseDtoList, HttpStatus.OK);
 	}
+
+	// @GetMapping
+	// @PathVariable("/{comment_id}/replies") //findChildrenComments 로 로직을 짜보는 어떨지?
 
 	@PutMapping("/{comment_id}") // 댓글 수정
 	public ResponseEntity<UpdateCommentResponseDto> updateComment(
@@ -61,7 +62,7 @@ public class CommentController {
 	}
 
 	@DeleteMapping("/{comment_id}") // 댓글 삭제
-	public ResponseEntity<Void> deleteComment(
+	public ResponseEntity<Void> deleteComment( // void라고 쓰는게 맞나? DeletRe~Dto를 만들어서..메세지 출력할 수 있도록
 		@PathVariable("comment_id") Long commentId
 	) {
 		commentService.deleteComment(commentId);
