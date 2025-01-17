@@ -10,6 +10,7 @@ import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
 import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
+import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -51,8 +52,8 @@ public class UserService {
     // 회원 탈퇴
 
     // 로그인
-    public User loginUserService(LoginUserRequestDto dto) {
-        // 이메일 기준으로 DB에서 유저 찾기
+    public User userLoginService(LoginUserRequestDto dto) {
+        // 이메일 기준으로 DB 유저 찾기
         Optional<User> findUser = userRepository.findByEmail(dto.getEmail());
 
         // 이메일이 DB에 없을 때 예외처리
@@ -66,8 +67,6 @@ public class UserService {
         // 로그인 완료 메시지 컨트롤러로 출력
         return user;
     }
-
-    // 로그아웃
 
     // 회원 다건 조회
 }
