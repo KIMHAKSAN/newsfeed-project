@@ -2,9 +2,12 @@ package com.newsfeedproject.controller.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newsfeedproject.common.entity.user.User;
@@ -12,8 +15,10 @@ import com.newsfeedproject.common.exception.BaseException;
 import com.newsfeedproject.common.exception.ResponseCode;
 import com.newsfeedproject.common.session.SessionConst;
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
+import com.newsfeedproject.dto.user.request.DeleteUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
+import com.newsfeedproject.dto.user.response.DeleteUserResponseDto;
 import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.service.user.UserService;
@@ -40,6 +45,29 @@ public class UserController {
 	}
 
 	// 회원 탈퇴
+	@DeleteMapping
+	public ResponseEntity<DeleteUserResponseDto> userDeleteAPI(
+		@RequestBody DeleteUserRequestDto dto,
+		HttpServletRequest request
+	) {
+		// 현재 세션 가져오기
+		HttpSession session = request.getSession(false);
+
+		if (session == null) {
+			throw new BaseException(ResponseCode.UNAUTHORIZED_USER);
+		}
+
+		// 세션에서 userId 가져오기
+		Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER_ID);
+
+		// 서비스에서 삭제 처리
+		userService.userDeleteService(userId, dto.getPassword());
+
+		// 탈퇴 후 세션 무효화
+		session.invalidate();
+
+		return new ResponseEntity<>(new DeleteUserResponseDto(), HttpStatus.OK);
+	}
 
 	// 로그인
 	@PostMapping("/login")
@@ -68,12 +96,6 @@ public class UserController {
 			// 세션 무효화
 			session.invalidate();
 		}
-		// 로그인한 상태에서만 로그아웃 되니까 null 인 경우는 필요 없지 않나?
-		// 로그인 안 된 상태에서 로그아웃 누르면 로그인 먼저 하라고 예외처리 뜰텐데... todo 필요성 생각해 보기
-		// if (session == null) {
-		// 	throw new BaseException(ResponseCode.USER_NOT_FOUND);
-		// todo - 만약 구현할 경우, ResponseCode에 세션값 없다는 예외처리 넣고 커스텀 예외처리 만들기
-		// }
 
 		return new ResponseEntity<>(new LogoutUserResponseDto(), HttpStatus.OK);
 	}

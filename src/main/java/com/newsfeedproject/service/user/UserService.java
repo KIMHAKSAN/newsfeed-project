@@ -9,6 +9,7 @@ import com.newsfeedproject.common.exception.ResponseCode;
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
+import com.newsfeedproject.dto.user.response.DeleteUserResponseDto;
 import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
@@ -50,6 +51,30 @@ public class UserService {
     }
 
     // 회원 탈퇴
+    public DeleteUserResponseDto userDeleteService(Long userId, String password) {
+        // 사용자 조회
+        User user = userRepository.findByIdAndIsDeletedFalse(userId)
+            .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+
+        // 비밀번호 확인
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
+        }
+
+        // 탈퇴 처리(소프트 딜리트)
+        user.markAsDeleted();
+        userRepository.save(user);
+
+        return new DeleteUserResponseDto();
+    }
+
+    // 회원 탈퇴 여부 확인
+    public boolean isUserDeleted(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+
+        return user.isDeleted();
+    }
 
     // 로그인
     public User userLoginService(LoginUserRequestDto dto) {
