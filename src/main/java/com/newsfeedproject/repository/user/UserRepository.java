@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.newsfeedproject.common.entity.user.User;
 
-@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	/*
