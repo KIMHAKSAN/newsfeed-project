@@ -16,17 +16,20 @@ import com.newsfeedproject.dto.user.response.FindUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 
 	// 회원가입
+	@Transactional
 	public CreateUserResponseDto userSignupService(CreateUserRequestDto dto) {
 		// 이메일이 DB에 있는 것과 중복인지 확인
 		userRepository.findByEmail(dto.getEmail())
@@ -53,6 +56,7 @@ public class UserService {
 	}
 
 	// 회원 탈퇴
+	@Transactional
 	public DeleteUserResponseDto userDeleteService(Long userId, String password) {
 		// 사용자 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
@@ -71,6 +75,7 @@ public class UserService {
 	}
 
 	// 로그인
+	@Transactional
 	public User userLoginService(LoginUserRequestDto dto) {
 		// 이메일 기준으로 DB 유저 찾기
 		Optional<User> findUser = userRepository.findByEmail(dto.getEmail());
