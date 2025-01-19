@@ -4,7 +4,7 @@ import com.newsfeedproject.common.exception.BaseException;
 import com.newsfeedproject.common.exception.ResponseCode;
 
 public class EmailNotFoundUserException extends BaseException {
-  public EmailNotFoundUserException() {
-    super(ResponseCode.EMAIL_NOT_FOUND);
-  }
+	public EmailNotFoundUserException() {
+		super(ResponseCode.EMAIL_NOT_FOUND);
+	}
 }
