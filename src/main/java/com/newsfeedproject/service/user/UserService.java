@@ -1,6 +1,8 @@
 package com.newsfeedproject.service.user;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.newsfeedproject.common.config.PasswordEncoder;
 import com.newsfeedproject.common.entity.user.User;
@@ -10,6 +12,7 @@ import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
 import com.newsfeedproject.dto.user.response.DeleteUserResponseDto;
+import com.newsfeedproject.dto.user.response.FindUserResponseDto;
 import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.repository.user.UserRepository;
@@ -94,4 +97,17 @@ public class UserService {
     }
 
     // 회원 다건 조회
+    public List<FindUserResponseDto> userFindAllService() {
+        // 탈퇴하지 않은 사용자만 조회
+        List<User> userList = userRepository.findByIsDeletedFalse();
+
+        // 조회된 User 엔티티를 FindUserResponseDto로 변환
+        // stream으로 데이터를 변환한 뒤, 그 결과를 collect()를 통해 List로 변환하여 수집
+        List<FindUserResponseDto> userResponseDtoList = userList.stream()
+            .map(user -> new FindUserResponseDto(user.getEmail(), user.getCreatedAt()))
+            .collect(Collectors.toList());
+
+        // 변환된 DTO 리스트 반환
+        return userResponseDtoList;
+    }
 }

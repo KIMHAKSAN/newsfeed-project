@@ -1,8 +1,11 @@
 package com.newsfeedproject.controller.user;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +22,7 @@ import com.newsfeedproject.dto.user.request.DeleteUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
 import com.newsfeedproject.dto.user.response.DeleteUserResponseDto;
+import com.newsfeedproject.dto.user.response.FindUserResponseDto;
 import com.newsfeedproject.dto.user.response.LoginUserResponseDto;
 import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.service.user.UserService;
@@ -101,4 +105,9 @@ public class UserController {
 	}
 
 	// 회원 다건 조회
+	@GetMapping
+	public ResponseEntity<List<FindUserResponseDto>> userFindAllAPI() {
+		List<FindUserResponseDto> userList = userService.userFindAllService();
+		return new ResponseEntity<>(userList, HttpStatus.OK);
+	}
 }
