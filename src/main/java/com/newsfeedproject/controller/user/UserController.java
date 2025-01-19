@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newsfeedproject.common.entity.user.User;
-import com.newsfeedproject.common.exception.BaseException;
-import com.newsfeedproject.common.exception.ResponseCode;
+import com.newsfeedproject.common.exception.user.UnauthorizedUserException;
 import com.newsfeedproject.common.session.SessionConst;
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
 import com.newsfeedproject.dto.user.request.DeleteUserRequestDto;
@@ -53,7 +52,7 @@ public class UserController {
 		HttpSession session = request.getSession(false);
 
 		if (session == null) {
-			throw new BaseException(ResponseCode.UNAUTHORIZED_USER);
+			throw new UnauthorizedUserException();
 		}
 
 		// 세션에서 userId 가져오기

@@ -6,8 +6,10 @@ import java.util.stream.Collectors;
 
 import com.newsfeedproject.common.config.PasswordEncoder;
 import com.newsfeedproject.common.entity.user.User;
-import com.newsfeedproject.common.exception.BaseException;
-import com.newsfeedproject.common.exception.ResponseCode;
+import com.newsfeedproject.common.exception.user.EmailAlreadyExistsUserException;
+import com.newsfeedproject.common.exception.user.EmailNotFoundUserException;
+import com.newsfeedproject.common.exception.user.PasswordMismatchUserException;
+import com.newsfeedproject.common.exception.user.UserNotFoundUserException;
 import com.newsfeedproject.dto.user.request.CreateUserRequestDto;
 import com.newsfeedproject.dto.user.request.LoginUserRequestDto;
 import com.newsfeedproject.dto.user.response.CreateUserResponseDto;
@@ -35,13 +37,13 @@ public class UserService {
 		userRepository.findByEmail(dto.getEmail())
 			.ifPresent(user -> {
 				// 이미 사용 중인 이메일 예외처리
-				throw new BaseException(ResponseCode.EMAIL_ALREADY_EXISTS);
+				throw new EmailAlreadyExistsUserException();
 			});
 
 		// 비번과 재입력비번 일치하는지 확인(equals는 주소값이 아닌, 값을 비교)
 		if (!dto.getPassword().equals(dto.getReEnterPassword())) {
 			// 비밀번호 불일치 예외처리
-			throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
+			throw new PasswordMismatchUserException();
 		}
 
 		// PasswordEncoder로 암호화
@@ -60,11 +62,11 @@ public class UserService {
 	public DeleteUserResponseDto userDeleteService(Long userId, String password) {
 		// 사용자 조회
 		User user = userRepository.findByIdAndIsDeletedFalse(userId)
-			.orElseThrow(() -> new BaseException(ResponseCode.USER_NOT_FOUND));
+			.orElseThrow(UserNotFoundUserException::new);
 
 		// 비밀번호 확인
 		if (!passwordEncoder.matches(password, user.getPassword())) {
-			throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
+			throw new PasswordMismatchUserException();
 		}
 
 		// 탈퇴 처리(소프트 딜리트)
@@ -81,11 +83,11 @@ public class UserService {
 		Optional<User> findUser = userRepository.findByEmail(dto.getEmail());
 
 		// 이메일이 DB에 없을 때 예외처리
-		User user = findUser.orElseThrow(() -> new BaseException(ResponseCode.EMAIL_NOT_FOUND));
+		User user = findUser.orElseThrow(EmailNotFoundUserException::new);
 
 		// 비밀번호 불일치 예외처리
 		if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
-			throw new BaseException(ResponseCode.PASSWORD_MISMATCH);
+			throw new PasswordMismatchUserException();
 		}
 
 		// 로그인 완료 메시지 컨트롤러로 출력
