@@ -95,7 +95,7 @@ public class UserService {
 		// 조회된 User 엔티티를 FindUserResponseDto로 변환
 		// stream으로 데이터를 변환한 뒤, 그 결과를 collect()를 통해 List로 변환하여 수집
 		List<FindUserResponseDto> userResponseDtoList = userList.stream()
-			.map(user -> new FindUserResponseDto(user.getEmail(), user.getCreatedAt()))
+			.map(user -> new FindUserResponseDto(user.getUserName(), user.getCreatedAt()))
 			.collect(Collectors.toList());
 
 		// 변환된 DTO 리스트 반환
