@@ -6,11 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newsfeedproject.common.entity.user.User;
@@ -28,11 +26,8 @@ import com.newsfeedproject.dto.user.response.LogoutUserResponseDto;
 import com.newsfeedproject.service.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -62,7 +57,7 @@ public class UserController {
 		}
 
 		// 세션에서 userId 가져오기
-		Long userId = (Long) session.getAttribute(SessionConst.LOGIN_USER_ID);
+		Long userId = (Long)session.getAttribute(SessionConst.LOGIN_USER_ID);
 
 		// 서비스에서 삭제 처리
 		userService.userDeleteService(userId, dto.getPassword());
